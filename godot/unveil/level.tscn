@@ -1,8 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://nl3o7f6a81oi"]
+[gd_scene load_steps=12 format=3 uid="uid://btnk6d4olylos"]
 
 [ext_resource type="Texture2D" uid="uid://bspb6xcnit2yt" path="res://Grass003_1K-PNG_Color.png" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://0ug4bmh6weks" path="res://Grass003_1K-PNG_NormalGL.png" id="2_oi3di"]
-[ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://addons/proto_controller/proto_controller.tscn" id="3_oi3di"]
+[ext_resource type="PackedScene" uid="uid://c5usa2ubyi1eg" path="res://assets/main_char/character_body_3d.tscn" id="5_f2txt"]
 
 [sub_resource type="Gradient" id="Gradient_0b4ue"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -77,8 +77,11 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 
 [node name="level" type="Node3D"]
 
+[node name="RootNode" parent="." instance=ExtResource("5_f2txt")]
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+transform = Transform3D(0.40833044, -0.5287876, 0.7440765, 0, 0.8151278, 0.57928115, -0.91283417, -0.23653813, 0.3328415, 0, 0, 0)
+light_energy = 3.6
 shadow_enabled = true
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
@@ -88,10 +91,5 @@ assets = SubResource("Terrain3DAssets_2orkt")
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-use_collision = true
-size = Vector3(1, 1.6, 1)
-
-[node name="ProtoController" parent="." instance=ExtResource("3_oi3di")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9190557, 0.04439383, 2.1941648)
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.9659258, 0, 0.25881913, 0, 1, 0, -0.25881913, 0, -0.9659258, 0, 1.4, -1.1)

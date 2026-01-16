@@ -1,8 +1,8 @@
-# First person game 
+## First person game 
 Vibe : a ps1, vhs retro vibe, probably will use godot engine for this game.
 Main character : "human", male in his mid 20's 
 
-# Different states 
+## Different states 
 Illused : the character will see a beautified, distorted version of reality, where he can also control parts of his environment within.
 
 Reality : the character will now see the real world, that is crumbling, this is the state he was unconsciously avoiding. 
@@ -11,7 +11,7 @@ Reality : the character will now see the real world, that is crumbling, this is 
 # Story
 Starts with a monologue about him and his past (blurry past, scenes with lots of noise)
 
-All going on in his room, vintage-style room. Timeframe is in the 2000's
+The intro will take place in his room, vintage-style. Timeframe is in the 2000's
 
 But as he is in his illusion, it will be a normal version, that is indeed derived from the actual facts.
 The story takes place in an old forsaken hospital (about 1y after the event). His past "unveils" as the story goes on.
@@ -21,7 +21,7 @@ The past consists of a fire, where he was abandoned by the staff, he was suppose
 He discovers the Veil originally to ease his pain, but turns out it actually has serious side effects such as making him go schizo
 
 
-Developement : 
+## Developement : 
 
 *actually idk yet tbd xD
 I'll get started on getting the engine to run first !*
