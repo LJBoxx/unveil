@@ -42,6 +42,8 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_rotation()
 
+#func _process(delta: float) -> void:
+
 func _input(event: InputEvent) -> void:
 	# Toggle Mouse
 	if event.is_action_pressed("ui_cancel"):
@@ -58,7 +60,6 @@ func _input(event: InputEvent) -> void:
 	
 	if Input.is_action_just_released("sprint"):
 		speed_modifier = 1.0
-
 
 func _physics_process(delta: float) -> void:
 	# Apply Gravity
@@ -92,8 +93,10 @@ func camera_look(movement: Vector2) -> void:
 		rotate_object_local(Vector3.UP, -camera_rotation.x)
 		camera.rotate_object_local(Vector3.RIGHT, -camera_rotation.y)
 	else:
-		if abs(camera_rotation.x) > body_turn_threshold:
-			var overflow = camera_rotation.x - (sign(camera_rotation.x)*body_turn_threshold)
+		var tresh = max(body_turn_threshold - pow(abs(camera_rotation.y), 3), 0.005)
+		print(tresh)
+		if abs(camera_rotation.x) > tresh:
+			var overflow = camera_rotation.x - (sign(camera_rotation.x)*tresh)
 			rotate_object_local(Vector3.UP, -overflow)
 			camera_rotation.x -= overflow
 		var pitch_quat = Quaternion(Vector3.RIGHT, camera_rotation.y) * Quaternion(Vector3.UP, -camera_rotation.x)
