@@ -3,6 +3,7 @@ extends CharacterBody3D
 # --- Node References ---
 @onready var camera = $"Root Scene/RootNode/CharacterArmature/Skeleton3D/Head/Head_end/Camera3D"
 @onready var skeleton = $"Root Scene/RootNode/CharacterArmature/Skeleton3D"
+@onready var anim_tree = $"Root Scene/AnimationTree"
 
 @export_group("External Nodes")
 @export var main_camera: Camera3D
@@ -12,8 +13,8 @@ extends CharacterBody3D
 # --- Settings ---
 @export_group("Movement Settings")
 @export var mouse_sensitivity: float = 0.001
-@export var base_speed: float = 3.0
-@export var acceleration: float = 120.0
+@export var base_speed: float = 1.6
+@export var acceleration: float = 10.0
 @export var sprint_speed_mult: float = 1.8
 @export var walk_speed_mult: float = 0.6
 @export var sprint_replenish_rate: float = 0.3
@@ -39,10 +40,12 @@ var head_bone: int
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
+	print(head_bone)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_rotation()
 
-#func _process(delta: float) -> void:
+func _process(_delta):
+	camera_look(Vector2.ZERO)
 
 func _input(event: InputEvent) -> void:
 	# Toggle Mouse
@@ -52,7 +55,7 @@ func _input(event: InputEvent) -> void:
 	
 	# Mouse Look
 	if event is InputEventMouseMotion:
-		camera_look(event.relative * mouse_sensitivity)
+		camera_rotation += event.relative * mouse_sensitivity
 
 	# Sprint Logic
 	if Input.is_action_just_pressed("sprint") and not sprint_on_cooldown:
@@ -80,6 +83,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
 		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
+	var horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	print(horizontal_speed)
+	anim_tree.set("parameters/walk/blend_position", horizontal_speed)
 
 	move_and_slide()
 
@@ -100,7 +106,12 @@ func camera_look(movement: Vector2) -> void:
 			rotate_object_local(Vector3.UP, -overflow)
 			camera_rotation.x -= overflow
 		var pitch_quat = Quaternion(Vector3.RIGHT, camera_rotation.y) * Quaternion(Vector3.UP, -camera_rotation.x)
-		skeleton.set_bone_pose_rotation(head_bone, pitch_quat)
+		var parent_bone = skeleton.get_bone_parent(head_bone)
+		var parent_global = skeleton.get_bone_global_pose(parent_bone)
+		var head_rest_pos = skeleton.get_bone_rest(head_bone).origin
+		var head_local_transform = Transform3D(Basis(pitch_quat), head_rest_pos)
+		var final_global_pose = parent_global * head_local_transform
+		skeleton.set_bone_global_pose_override(head_bone, final_global_pose, 1.0, true)
 
 func update_camera_rotation() -> void:
 	camera_rotation.x = rotation.y
