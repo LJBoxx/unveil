@@ -4,6 +4,8 @@ extends CharacterBody3D
 @onready var camera = $"Root Scene/RootNode/CharacterArmature/Skeleton3D/Head/Head_end/Camera3D"
 @onready var skeleton = $"Root Scene/RootNode/CharacterArmature/Skeleton3D"
 @onready var anim_tree = $"Root Scene/AnimationTree"
+@onready var canvas = $CanvasLayer
+@onready var stamina : ProgressBar = $CanvasLayer/Control/stamina
 
 @export_group("External Nodes")
 @export var main_camera: Camera3D
@@ -14,22 +16,23 @@ extends CharacterBody3D
 @export_group("Movement Settings")
 @export var mouse_sensitivity: float = 0.001
 @export var base_speed: float = 1.6
-@export var acceleration: float = 10.0
+@export var acceleration: float = 6.0
 @export var sprint_speed_mult: float = 1.8
 @export var walk_speed_mult: float = 0.6
 @export var sprint_replenish_rate: float = 0.3
 @export var enable_sprint: bool = true
 @export var sprint_cooldown_time: float = 3.0
 @export var sprint_time: float = 1.0
+var current_sprint_time: float = 1.0
 @export var motion_sick: bool = false
 @export_range(0.01,1.0) var air_acceleration_modifier: float = 0.1
 var sprint_on_cooldown: bool = false
-var sprint_time_remaining: float = sprint_time
 
 const NORMAL_speed = 1
 @export_range(1.0,3.0) var sprint_speed: float = 2.0
 @export_range(0.1,1.0) var walk_speed: float = 0.5
 var speed_modifier: float = NORMAL_speed
+
 
 # --- Internal Variables ---
 var camera_rotation: Vector2 = Vector2.ZERO
@@ -40,7 +43,6 @@ var head_bone: int
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
-	print(head_bone)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_rotation()
 
@@ -57,14 +59,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		camera_rotation += event.relative * mouse_sensitivity
 
-	# Sprint Logic
-	if Input.is_action_just_pressed("sprint") and not sprint_on_cooldown:
-		speed_modifier = sprint_speed_mult
-	
-	if Input.is_action_just_released("sprint"):
-		speed_modifier = 1.0
-
 func _physics_process(delta: float) -> void:
+	handle_movement_state(delta)
+	handle_stamina(delta)
 	# Apply Gravity
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -83,8 +80,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
 		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
+	
 	var horizontal_speed = Vector2(velocity.x, velocity.z).length()
-	print(horizontal_speed)
 	anim_tree.set("parameters/walk/blend_position", horizontal_speed)
 
 	move_and_slide()
@@ -100,7 +97,6 @@ func camera_look(movement: Vector2) -> void:
 		camera.rotate_object_local(Vector3.RIGHT, -camera_rotation.y)
 	else:
 		var tresh = max(body_turn_threshold - pow(abs(camera_rotation.y), 3), 0.005)
-		print(tresh)
 		if abs(camera_rotation.x) > tresh:
 			var overflow = camera_rotation.x - (sign(camera_rotation.x)*tresh)
 			rotate_object_local(Vector3.UP, -overflow)
@@ -116,3 +112,34 @@ func camera_look(movement: Vector2) -> void:
 func update_camera_rotation() -> void:
 	camera_rotation.x = rotation.y
 	camera_rotation.y = camera.rotation.x
+
+func handle_stamina(delta):
+	if speed_modifier == sprint_speed:
+		current_sprint_time -= delta
+		
+		if current_sprint_time <= 0:
+			current_sprint_time = 0
+			sprint_on_cooldown = true 
+			speed_modifier = NORMAL_speed
+	
+	else:
+		if is_on_floor():
+			current_sprint_time = move_toward(current_sprint_time, sprint_time, delta * sprint_replenish_rate)
+	
+	var sprint_bar_value = (current_sprint_time / sprint_time) * 100
+	stamina.value = sprint_bar_value
+	if sprint_bar_value == 100:
+		sprint_on_cooldown = false
+		stamina.hide()
+	else:
+		stamina.show()
+
+func handle_movement_state(_delta):
+	var direction = Input.get_vector("left", "right", "forward", "backward")
+	var is_moving = direction.length_squared() > 0
+	var is_holding_sprint = Input.is_action_pressed("sprint")
+	
+	if is_moving and is_holding_sprint and not sprint_on_cooldown and current_sprint_time > 0:
+		speed_modifier = sprint_speed
+	else:
+		speed_modifier = NORMAL_speed
