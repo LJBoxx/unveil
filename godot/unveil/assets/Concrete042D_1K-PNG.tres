@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://d0qkmfjtwq31h"]
+
+[ext_resource type="Texture2D" uid="uid://c4vjesujux8yp" path="res://assets/Concrete042D_1K-PNG_Color.png" id="Color"]
+[ext_resource type="Texture2D" uid="uid://2pquddkic80v" path="res://assets/Concrete042D_1K-PNG_Roughness.png" id="Roughness"]
+
+[resource]
+albedo_texture = ExtResource("Color")
+metallic = 1.0
+metallic_texture_channel = 4
+roughness_texture = ExtResource("Roughness")
+roughness_texture_channel = 4
+normal_enabled = true
+ao_enabled = true
+ao_texture_channel = 4
+heightmap_enabled = true
+heightmap_scale = 1.0
+uv1_triplanar = true
