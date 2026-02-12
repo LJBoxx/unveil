@@ -1,8 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://btnk6d4olylos"]
+[gd_scene load_steps=14 format=3 uid="uid://btnk6d4olylos"]
 
 [ext_resource type="Texture2D" uid="uid://bspb6xcnit2yt" path="res://Grass003_1K-PNG_Color.png" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://0ug4bmh6weks" path="res://Grass003_1K-PNG_NormalGL.png" id="2_oi3di"]
-[ext_resource type="Shader" uid="uid://6183dif1jbit" path="res://concrete.tres" id="4_0b4ue"]
+[ext_resource type="PackedScene" uid="uid://bfgy30d3drnq2" path="res://ceiling.tscn" id="4_0b4ue"]
 [ext_resource type="PackedScene" uid="uid://c5usa2ubyi1eg" path="res://assets/main_char/character_body_3d.tscn" id="5_f2txt"]
 
 [sub_resource type="Gradient" id="Gradient_0b4ue"]
@@ -76,21 +76,17 @@ normal_texture = ExtResource("2_oi3di")
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_i2t4f")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_8cye3")])
 
-[sub_resource type="BoxMesh" id="BoxMesh_0b4ue"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_f2txt"]
-render_priority = 0
-shader = ExtResource("4_0b4ue")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_1ainy"]
+[sub_resource type="Environment" id="Environment_0b4ue"]
+background_mode = 1
 
 [node name="level" type="Node3D"]
 
 [node name="RootNode" parent="." instance=ExtResource("5_f2txt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2999992, 0.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999924, 3.7252903e-08, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.40833044, -0.5287876, 0.7440765, 0, 0.8151278, 0.57928115, -0.91283417, -0.23653813, 0.3328415, 0, 0, 0)
+visible = false
 light_energy = 3.6
 shadow_enabled = true
 
@@ -104,13 +100,32 @@ metadata/_edit_lock_ = true
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.9659258, 0, 0.25881913, 0, 1, 0, -0.25881913, 0, -0.9659258, 0, 1.4, -1.1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(14, 0, 0, 0, 0.6, 0, 0, 0, 14, 0, 0.29999998, 0)
-mesh = SubResource("BoxMesh_0b4ue")
-skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_f2txt")
+[node name="StaticBody3D" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, 0)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0b4ue")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("BoxShape3D_1ainy")
+[node name="StaticBody3D2" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, 3)
+
+[node name="StaticBody3D3" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0000002, 2.7, 0)
+
+[node name="StaticBody3D4" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.7, 3)
+
+[node name="StaticBody3D5" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, 0)
+
+[node name="StaticBody3D6" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, 3)
+
+[node name="StaticBody3D7" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, -3)
+
+[node name="StaticBody3D8" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.7, -3)
+
+[node name="StaticBody3D9" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, -3)
