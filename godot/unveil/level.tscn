@@ -84,7 +84,7 @@ background_mode = 1
 [node name="level" type="Node3D"]
 
 [node name="RootNode" parent="." instance=ExtResource("5_f2txt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999924, 3.7252903e-08, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19999924, 0.10000004, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.40833044, -0.5287876, 0.7440765, 0, 0.8151278, 0.57928115, -0.91283417, -0.23653813, 0.3328415, 0, 0, 0)

@@ -5,6 +5,7 @@ extends CanvasLayer
 var head_bone: int
 var pressed: bool = false
 var current_angle: float = 0.0
+var timer: float = 0.0
 
 func _ready() -> void:
 	# Get the bone index once
@@ -13,13 +14,20 @@ func _ready() -> void:
 		print("Bone 'Head' not found!")
 
 func _process(delta: float) -> void:
-	#if pressed and head_bone != -1:
-		# delta * 1.0 (speed) ensures smooth rotation every frame
-		current_angle += delta * 1.0 
-		turn(current_angle)
+	if pressed:
+		timer += delta
+		if timer < 1.5:
+			current_angle = sin(timer * 5.0) * 0.5
+			turn(current_angle)
+		else:
+			current_angle = deg_to_rad(190)
+			turn(current_angle)
+			pressed = false
 
 func _on_button_pressed() -> void:
 	pressed = true
+	timer = 0
+	current_angle = 0
 	print("press")
 
 func turn(increment: float):
