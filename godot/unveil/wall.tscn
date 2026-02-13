@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://dibk5ywal17al"]
+
+[ext_resource type="Texture2D" uid="uid://bxg3sv6stgjem" path="res://assets/wall_1024/hosp2.jpg" id="1_xxgf6"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_y4f30"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iuee5"]
+albedo_texture = ExtResource("1_xxgf6")
+uv1_scale = Vector3(0.325, 0.325, 0.325)
+uv1_offset = Vector3(0, 1, 0)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xxgf6"]
+size = Vector3(1, 1, 0.001)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 0.9, 0, 0, 0)
+mesh = SubResource("QuadMesh_y4f30")
+surface_material_override/0 = SubResource("StandardMaterial3D_iuee5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, -0.00049999356)
+shape = SubResource("BoxShape3D_xxgf6")

@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://btnk6d4olylos"]
+[gd_scene load_steps=16 format=3 uid="uid://btnk6d4olylos"]
 
 [ext_resource type="Texture2D" uid="uid://bspb6xcnit2yt" path="res://Grass003_1K-PNG_Color.png" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://0ug4bmh6weks" path="res://Grass003_1K-PNG_NormalGL.png" id="2_oi3di"]
 [ext_resource type="PackedScene" uid="uid://bfgy30d3drnq2" path="res://ceiling.tscn" id="4_0b4ue"]
+[ext_resource type="PackedScene" uid="uid://dibk5ywal17al" path="res://wall.tscn" id="5_1ainy"]
 [ext_resource type="PackedScene" uid="uid://c5usa2ubyi1eg" path="res://assets/main_char/character_body_3d.tscn" id="5_f2txt"]
+[ext_resource type="PackedScene" uid="uid://cvnv0d5i2r46e" path="res://floor.tscn" id="6_1ainy"]
 
 [sub_resource type="Gradient" id="Gradient_0b4ue"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -100,32 +102,47 @@ metadata/_edit_lock_ = true
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.9659258, 0, 0.25881913, 0, 1, 0, -0.25881913, 0, -0.9659258, 0, 1.4, -1.1)
 
-[node name="StaticBody3D" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, 0)
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0b4ue")
 
+[node name="StaticBody3D" parent="." instance=ExtResource("4_0b4ue")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.9, 0)
+
 [node name="StaticBody3D2" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.9, 3)
 
 [node name="StaticBody3D3" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0000002, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0000002, 2.9, 0)
 
 [node name="StaticBody3D4" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.7, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.9, 3)
 
 [node name="StaticBody3D5" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.9, 0)
 
 [node name="StaticBody3D6" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.9, 3)
 
 [node name="StaticBody3D7" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.7, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2351742e-08, 2.9, -3)
 
 [node name="StaticBody3D8" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.7, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.9, -3)
 
 [node name="StaticBody3D9" parent="." instance=ExtResource("4_0b4ue")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.7, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.9, -3)
+
+[node name="StaticBody3D10" parent="." instance=ExtResource("5_1ainy")]
+transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5000001, -4.5)
+
+[node name="StaticBody3D12" parent="." instance=ExtResource("5_1ainy")]
+transform = Transform3D(-3, 0, 8.742278e-08, 0, 1, 0, -2.6226832e-07, 0, -1, 0, 1.5000001, 4.5)
+
+[node name="StaticBody3D13" parent="." instance=ExtResource("5_1ainy")]
+transform = Transform3D(-1.3113416e-07, 0, 1, 0, 1, 0, -3, 0, -4.371139e-08, -4.5, 1.5000001, 1.9670125e-07)
+
+[node name="StaticBody3D14" parent="." instance=ExtResource("5_1ainy")]
+transform = Transform3D(-1.3113416e-07, 0, -1, 0, 1, 0, 3, 0, -4.371139e-08, 4.5, 1.5000001, -1.9670125e-07)
+
+[node name="StaticBody3D11" parent="." instance=ExtResource("6_1ainy")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 9.685755e-08, 0.1, 0)

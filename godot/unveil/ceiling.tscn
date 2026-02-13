@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bfgy30d3drnq2"]
+[gd_scene load_steps=9 format=3 uid="uid://bfgy30d3drnq2"]
 
 [ext_resource type="Shader" uid="uid://c0x4ejlvcjh01" path="res://ceiling.gdshader" id="1_6cisk"]
 [ext_resource type="Texture2D" uid="uid://c1f6sgkion4uu" path="res://assets/Ceiling/tile-light-v2.jpg" id="1_tampc"]
 [ext_resource type="Texture2D" uid="uid://c41hne74e5a2k" path="res://assets/Ceiling/tile-light.jpg" id="2_wsuqj"]
 [ext_resource type="Texture2D" uid="uid://cx7o73pbx1kcr" path="res://assets/Ceiling/tile.jpg" id="4_tftwo"]
+[ext_resource type="Script" uid="uid://bys61okucrx0g" path="res://ceiling.gd" id="5_tftwo"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kth4p"]
 render_priority = 0
@@ -24,6 +25,7 @@ size = Vector3(3, 0.1, 3)
 transform = Transform3D(3, 0, 0, 0, -1.3113416e-07, -1, 0, 3, -4.371139e-08, 0, 0, 0)
 material_override = SubResource("ShaderMaterial_kth4p")
 mesh = SubResource("QuadMesh_wsuqj")
+script = ExtResource("5_tftwo")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="ceiling"]
 transform = Transform3D(0.33333334, 0, 0, 0, 0.33333334, 0, 0, 0, 1, 0, 1.4570463e-09, 0.1)

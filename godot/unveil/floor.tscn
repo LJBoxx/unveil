@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://cvnv0d5i2r46e"]
+
+[ext_resource type="Shader" uid="uid://d2uvh4s2iq2yg" path="res://floor.gdshader" id="1_cgngl"]
+[ext_resource type="Texture2D" uid="uid://bdl8gy80tfri3" path="res://assets/Floor_1024/floor1.tga" id="2_wd3ws"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_ryoud"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oj3tl"]
+render_priority = 0
+shader = ExtResource("1_cgngl")
+shader_parameter/floor_texture = ExtResource("2_wd3ws")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cgngl"]
+size = Vector3(3, 0.001, 3)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, -1.3113416e-07, 1, 0, -3, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_ryoud")
+surface_material_override/0 = SubResource("ShaderMaterial_oj3tl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00049999356, 0)
+shape = SubResource("BoxShape3D_cgngl")
