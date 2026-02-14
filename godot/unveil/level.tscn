@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=4 uid="uid://btnk6d4olylos"]
+[gd_scene load_steps=25 format=4 uid="uid://btnk6d4olylos"]
 
 [ext_resource type="Texture2D" uid="uid://bspb6xcnit2yt" path="res://Grass003_1K-PNG_Color.png" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://0ug4bmh6weks" path="res://Grass003_1K-PNG_NormalGL.png" id="2_oi3di"]
@@ -84,8 +84,18 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 [sub_resource type="Environment" id="Environment_0b4ue"]
 background_mode = 1
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_i2t4f"]
+size = Vector3(67, 16.300001, 34.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i2t4f"]
+cull_mode = 1
+shading_mode = 0
+grow = true
+grow_amount = 0.564
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dam85"]
 resource_name = "Material01"
+next_pass = SubResource("StandardMaterial3D_i2t4f")
 cull_mode = 2
 albedo_texture = ExtResource("7_i2t4f")
 
@@ -121,8 +131,8 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_lvetc")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_i2t4f"]
-size = Vector3(67, 16.300001, 34.2)
+[sub_resource type="BoxShape3D" id="BoxShape3D_8cye3"]
+size = Vector3(83.3, 7.9, 46.7)
 
 [node name="level" type="Node3D"]
 
@@ -178,24 +188,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.9, -3)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.9, -3)
 
 [node name="wall1" parent="." instance=ExtResource("5_1ainy")]
-transform = Transform3D(3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5000001, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5000001, -4.5)
 
 [node name="wall2" parent="." instance=ExtResource("5_1ainy")]
-transform = Transform3D(-3, 0, 8.742278e-08, 0, 1, 0, -2.6226832e-07, 0, -1, 0, 1.5000001, 4.5)
+transform = Transform3D(-1, 0, 1.509958e-07, 0, 1, 0, -1.509958e-07, 0, -1, 0, 1.5000001, 4.5)
 
 [node name="wall3" parent="." instance=ExtResource("5_1ainy")]
-transform = Transform3D(-1.3113416e-07, 0, 1, 0, 1, 0, -3, 0, -4.371139e-08, -4.5, 1.5000001, 1.9670125e-07)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.5, 1.5000001, 1.9670125e-07)
 
 [node name="wall4" parent="." instance=ExtResource("5_1ainy")]
-transform = Transform3D(-1.3113416e-07, 0, -1, 0, 1, 0, 3, 0, -4.371139e-08, 4.5, 1.5000001, -1.9670125e-07)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.5, 1.5000001, -1.9670125e-07)
 
 [node name="floor" parent="." instance=ExtResource("6_1ainy")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 9.685755e-08, 0.1, 0)
-
-[node name="screen" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.01, -5.551115e-17, 0, 0, 0, -0.01, 5.551115e-17, 0.01, 0, -0.5999999, 1.6, 4.4700007)
-mesh = SubResource("ArrayMesh_wdlso")
-skeleton = NodePath("")
 
 [node name="bed" type="StaticBody3D" parent="."]
 transform = Transform3D(-0.03, 0, 2.6226832e-09, 0, 0.03, 0, -2.6226832e-09, 0, -0.03, -3.3, 0.3000001, 2.6999998)
@@ -210,4 +215,13 @@ transform = Transform3D(-62.83334, -5.4930642e-06, 2.4010945e-13, 0, -2.7465323e
 transform = Transform3D(1, 0, -5.073275e-12, 0, 1, 0, 5.073275e-12, 0, 1, 3.800003, 1.5500011, -1.5999985)
 shape = SubResource("BoxShape3D_i2t4f")
 
-[editable path="StaticBody3D"]
+[node name="screen" type="StaticBody3D" parent="."]
+
+[node name="screen" type="MeshInstance3D" parent="screen"]
+transform = Transform3D(0.01, -5.551115e-17, 0, 0, 0, -0.01, 5.551115e-17, 0.01, 0, -0.5999999, 1.6, 4.4600005)
+mesh = SubResource("ArrayMesh_wdlso")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="screen"]
+transform = Transform3D(0.01, -5.551115e-17, 0, 0, 0, -0.01, 5.551115e-17, 0.01, 0, -0.60749984, 1.6315, 4.4815006)
+shape = SubResource("BoxShape3D_8cye3")

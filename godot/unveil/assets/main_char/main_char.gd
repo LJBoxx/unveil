@@ -33,6 +33,8 @@ const NORMAL_speed = 1
 @export_range(0.1,1.0) var walk_speed: float = 0.5
 var speed_modifier: float = NORMAL_speed
 
+@export_range(0.5,3.0) var reach: float = 2
+
 
 # --- Internal Variables ---
 var camera_rotation: Vector2 = Vector2.ZERO
@@ -40,6 +42,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var cam_y_min = deg_to_rad(-50)
 var cam_y_max = deg_to_rad(55)
 var head_bone: int
+var hover_object =  null
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
@@ -61,6 +64,11 @@ func _input(event: InputEvent) -> void:
 	# Mouse Look
 	if event is InputEventMouseMotion:
 		camera_rotation += event.relative * mouse_sensitivity
+		check_hover()
+	
+	if hover_object != null and Input.is_action_pressed("action"):
+		print(hover_object)
+#		interract(hover_object)
 
 func _physics_process(delta: float) -> void:
 	handle_movement_state(delta)
@@ -145,3 +153,49 @@ func handle_movement_state(_delta):
 		speed_modifier = sprint_speed
 	else:
 		speed_modifier = NORMAL_speed
+		
+func check_hover():
+	var mouse_pos = get_viewport().get_mouse_position()
+	var from = camera.project_ray_origin(mouse_pos)
+	var to = from + camera.project_ray_normal(mouse_pos) * 1000
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	var result = space_state.intersect_ray(query)
+	
+	var previous_hover = hover_object
+	
+	if result:
+		var distance = global_position.distance_to(result.position)
+		if distance <= reach:
+			hover_object = result.collider
+		else:
+			hover_object = null
+	else:
+		hover_object = null
+	
+	if previous_hover != hover_object:
+		if previous_hover:
+			remove_outline(previous_hover)
+		if hover_object:
+			add_outline(hover_object)
+
+
+func hover(object):
+	add_outline(object)
+#
+#func interract(object):
+#	object.set
+
+func add_outline(body):
+	for child in body.get_children():
+		if child is MeshInstance3D:
+			var material = child.get_active_material(0)
+			if material and material.next_pass:
+				material.next_pass.set("grow", true)
+
+func remove_outline(body):
+	for child in body.get_children():
+		if child is MeshInstance3D:
+			var material = child.get_active_material(0)
+			if material and material.next_pass:
+				material.next_pass.set("grow", false)
