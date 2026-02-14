@@ -9,7 +9,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var material = get_active_material(0)
+	#var material = get_active_material(0)
 	var rng = randf()
 	if flicker:
 		if rng < 0.9:

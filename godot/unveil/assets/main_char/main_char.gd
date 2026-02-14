@@ -45,9 +45,12 @@ func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_rotation()
+#	var tween = create_tween()
+#	tween.tween_property(blackscr, "shader_parameter/fade_amount", 0.0, 1.0)
 
 func _process(_delta):
 	camera_look(Vector2.ZERO)
+	
 
 func _input(event: InputEvent) -> void:
 	# Toggle Mouse
@@ -121,7 +124,6 @@ func handle_stamina(delta):
 			current_sprint_time = 0
 			sprint_on_cooldown = true 
 			speed_modifier = NORMAL_speed
-	
 	else:
 		if is_on_floor():
 			current_sprint_time = move_toward(current_sprint_time, sprint_time, delta * sprint_replenish_rate)
