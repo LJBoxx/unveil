@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://btnk6d4olylos"]
+[gd_scene load_steps=35 format=4 uid="uid://btnk6d4olylos"]
 
 [ext_resource type="Texture2D" uid="uid://bspb6xcnit2yt" path="res://Grass003_1K-PNG_Color.png" id="1_vonw3"]
 [ext_resource type="Texture2D" uid="uid://0ug4bmh6weks" path="res://Grass003_1K-PNG_NormalGL.png" id="2_oi3di"]
@@ -225,12 +225,19 @@ shadow_mesh = SubResource("ArrayMesh_i2t4f")
 [sub_resource type="BoxShape3D" id="BoxShape3D_8cye3"]
 size = Vector3(83.3, 7.9, 46.7)
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_km5ld"]
+viewport_path = NodePath("screen/Sprite3D/SubViewport")
+
 [node name="level" type="Node3D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="RootNode" parent="." instance=ExtResource("5_f2txt")]
+[node name="RootNode" parent="." node_paths=PackedStringArray("bed_camera") instance=ExtResource("5_f2txt")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.19999924, 0.10000004, 0)
+bed_camera = NodePath("../Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(4.371139e-08, -1, -3.9081033e-15, -4.569558e-08, 1.910686e-15, -1, 1, 4.371139e-08, -4.569558e-08, -3.8000002, 1, 2.6)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.40833044, -0.5287876, 0.7440765, 0, 0.8151278, 0.57928115, -0.91283417, -0.23653813, 0.3328415, 0, 0, 0)
@@ -244,9 +251,6 @@ material = SubResource("Terrain3DMaterial_n6hdu")
 assets = SubResource("Terrain3DAssets_2orkt")
 top_level = true
 metadata/_edit_lock_ = true
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.9659258, 0, 0.25881913, 0, 1, 0, -0.25881913, 0, -0.9659258, 0, 1.4, -1.1)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0b4ue")
@@ -352,7 +356,7 @@ shape = SubResource("BoxShape3D_8cye3")
 transform = Transform3D(-0.12, 0, -1.0490733e-08, 0, 0.12, 0, 1.0490733e-08, 0, -0.12, -0.6, 1.6, 4.46)
 billboard = 1
 no_depth_test = true
-texture = SubResource("ViewportTexture_8cye3")
+texture = SubResource("ViewportTexture_km5ld")
 
 [node name="SubViewport" type="SubViewport" parent="screen/Sprite3D"]
 transparent_bg = true

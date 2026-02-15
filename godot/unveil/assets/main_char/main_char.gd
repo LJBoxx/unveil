@@ -5,10 +5,11 @@ extends CharacterBody3D
 @onready var skeleton = $"Root Scene/RootNode/CharacterArmature/Skeleton3D"
 @onready var anim_tree = $"Root Scene/AnimationTree"
 @onready var canvas = $CanvasLayer
+@onready var root = $"."
 @onready var stamina : ProgressBar = $CanvasLayer/Control/stamina
 
 @export_group("External Nodes")
-@export var main_camera: Camera3D
+@export var bed_camera: Camera3D
 @export var sprint_timer: Timer
 @export var body_turn_threshold: float = deg_to_rad(15.0)
 
@@ -43,6 +44,8 @@ var cam_y_min = deg_to_rad(-50)
 var cam_y_max = deg_to_rad(55)
 var head_bone: int
 var hover_object =  null
+var interracting: bool
+var sleeping: bool
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
@@ -53,22 +56,21 @@ func _ready() -> void:
 func _process(_delta):
 	camera_look(Vector2.ZERO)
 	
-
 func _input(event: InputEvent) -> void:
 	# Toggle Mouse
 	if event.is_action_pressed("ui_cancel"):
 		var mode = Input.MOUSE_MODE_VISIBLE if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
 		Input.set_mouse_mode(mode)
-	
+		
 	# Mouse Look
 	if event is InputEventMouseMotion:
 		camera_rotation += event.relative * mouse_sensitivity
 		check_hover()
 	
-	if hover_object != null and Input.is_action_pressed("action"):
+	if hover_object != null and Input.is_action_just_pressed("action"):
 		print(hover_object)
-#		interract(hover_object)
-
+		interract(hover_object)
+		
 func _physics_process(delta: float) -> void:
 	handle_movement_state(delta)
 	handle_stamina(delta)
@@ -178,12 +180,15 @@ func check_hover():
 		if hover_object:
 			add_outline(hover_object)
 
-
-func hover(object):
-	add_outline(object)
-#
-#func interract(object):
-#	object.set
+func interract(object):
+	var label = object.find_child("Label", true, false)
+	if label:
+		if label.text == "View":
+			print("viewing")
+			interracting = true
+		elif label.text == "Sleep":
+			interracting = true	
+			sleep()
 
 func add_outline(body):
 	for child in body.get_children():
@@ -209,3 +214,23 @@ func disable_all_outlines(node):
 		remove_outline(node)
 	for child in node.get_children():
 		disable_all_outlines(child)
+
+func sleep():
+	bed_camera.make_current()
+	print("sleeping")
+	root.hide()
+	sleeping = true
+	freeze_player(true)  # Use the function
+
+func exit():
+	if interracting:
+		if sleeping:
+			sleeping = false
+			root.show()
+			camera.make_current()
+			freeze_player(false)  # Use the function
+		interracting = false
+
+func freeze_player(is_frozen: bool):
+	set_physics_process(is_frozen)
+	set_process(is_frozen)
