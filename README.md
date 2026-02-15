@@ -24,3 +24,9 @@ Open with godot editor and build !
 I know it is very laggy on wasm, unfortunately there is a texture bug with the pill container... it doesn't do that inside godot debug editor, but only in wasm for some reason...
 
 The game as of right now consist of finding all the pills container before your health runs out. Initially i wanted to make a sort of interractive story game but i need to ship something  ;-;
+
+### credits
+i might forget some, will update later then.
+https://www.turbosquid.com/3d-models/hospital-3d-model-pack-630342
+
+https://poly.pizza/m/JFrLIKqvCH
