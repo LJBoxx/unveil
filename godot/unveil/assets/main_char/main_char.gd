@@ -48,8 +48,7 @@ func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	update_camera_rotation()
-#	var tween = create_tween()
-#	tween.tween_property(blackscr, "shader_parameter/fade_amount", 0.0, 1.0)
+	disable_all_outlines(get_tree().root)
 
 func _process(_delta):
 	camera_look(Vector2.ZERO)
@@ -188,6 +187,8 @@ func hover(object):
 
 func add_outline(body):
 	for child in body.get_children():
+		if child is Sprite3D:
+			child.show()
 		if child is MeshInstance3D:
 			var material = child.get_active_material(0)
 			if material and material.next_pass:
@@ -195,7 +196,16 @@ func add_outline(body):
 
 func remove_outline(body):
 	for child in body.get_children():
+		if child is Sprite3D:
+			child.hide()
+	for child in body.get_children():
 		if child is MeshInstance3D:
 			var material = child.get_active_material(0)
 			if material and material.next_pass:
 				material.next_pass.set("grow", false)
+
+func disable_all_outlines(node):
+	if node is StaticBody3D:
+		remove_outline(node)
+	for child in node.get_children():
+		disable_all_outlines(child)
