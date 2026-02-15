@@ -85,6 +85,9 @@ func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("restore"):
 		restore_health()
 		
+	if Input.is_action_just_pressed("catch"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		
 func _physics_process(delta: float) -> void:
 	handle_movement_state(delta)
 	handle_stamina(delta)
