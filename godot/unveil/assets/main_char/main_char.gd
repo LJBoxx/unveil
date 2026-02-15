@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var canvas = $CanvasLayer
 @onready var root = $"."
 @onready var stamina : ProgressBar = $CanvasLayer/Control/stamina
+@onready var pill_counter : Label = $CanvasLayer/Control/Label
 
 @export_group("External Nodes")
 @export var bed_camera: Camera3D
@@ -33,8 +34,8 @@ const NORMAL_speed = 1
 @export_range(1.0,3.0) var sprint_speed: float = 2.0
 @export_range(0.1,1.0) var walk_speed: float = 0.5
 var speed_modifier: float = NORMAL_speed
-
 @export_range(0.5,3.0) var reach: float = 2
+@export_range(0,10) var pills: int = 0
 
 
 # --- Internal Variables ---
@@ -44,8 +45,9 @@ var cam_y_min = deg_to_rad(-50)
 var cam_y_max = deg_to_rad(55)
 var head_bone: int
 var hover_object =  null
-var interracting: bool
-var sleeping: bool
+var interacting: bool = false
+var sleeping: bool = false
+var viewing: bool = false
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
@@ -68,8 +70,8 @@ func _input(event: InputEvent) -> void:
 		check_hover()
 	
 	if hover_object != null and Input.is_action_just_pressed("action"):
-		print(hover_object)
-		interract(hover_object)
+#		print(hover_object)
+		interact(hover_object)
 		
 func _physics_process(delta: float) -> void:
 	handle_movement_state(delta)
@@ -180,15 +182,16 @@ func check_hover():
 		if hover_object:
 			add_outline(hover_object)
 
-func interract(object):
-	var label = object.find_child("Label", true, false)
-	if label:
-		if label.text == "View":
-			print("viewing")
-			interracting = true
-		elif label.text == "Sleep":
-			interracting = true	
-			sleep()
+func interact(object):
+	if !interacting:
+		if object is Interactable:
+#			print("type: ", object.interaction_type)
+			match object.interaction_type:
+				"Sleep": sleep()
+				"View": view(object)
+				"Grab": grab(object)
+	else:
+		exit()
 
 func add_outline(body):
 	for child in body.get_children():
@@ -216,21 +219,40 @@ func disable_all_outlines(node):
 		disable_all_outlines(child)
 
 func sleep():
+	interacting = true
 	bed_camera.make_current()
-	print("sleeping")
+#	print("sleeping")
 	root.hide()
 	sleeping = true
-	freeze_player(true)  # Use the function
+	freeze_player(true) 
+
+func view(object):
+	if object.interaction_data.has("panel"):
+		var panel_scene = object.interaction_data["panel"]
+		var panel = panel_scene.instantiate()
+		canvas.add_child(panel)
+		interacting = true
+		freeze_player(true)
+
+func grab(object):
+	if object.interaction_data.has("Amount"):
+		pills += object.interaction_data["Amount"]
+		pill_counter.text = "Pills: " + str(pills)
+		object.queue_free()
 
 func exit():
-	if interracting:
+	if interacting:
 		if sleeping:
 			sleeping = false
 			root.show()
 			camera.make_current()
-			freeze_player(false)  # Use the function
-		interracting = false
+		else:
+			var view_panel = canvas.get_node_or_null("ViewPanel")
+			if view_panel:
+				view_panel.hide()
+		freeze_player(false)
+		interacting = false
 
 func freeze_player(is_frozen: bool):
-	set_physics_process(is_frozen)
-	set_process(is_frozen)
+	set_physics_process(!is_frozen)
+	set_process(!is_frozen)
