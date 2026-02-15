@@ -7,7 +7,9 @@ extends CharacterBody3D
 @onready var canvas = $CanvasLayer
 @onready var root = $"."
 @onready var stamina : ProgressBar = $CanvasLayer/Control/stamina
+@onready var health_bar : ProgressBar = $CanvasLayer/Control/health
 @onready var pill_counter : Label = $CanvasLayer/Control/Label
+@onready var death_text : Label = $CanvasLayer/Control/death
 
 @export_group("External Nodes")
 @export var bed_camera: Camera3D
@@ -34,9 +36,10 @@ const NORMAL_speed = 1
 @export_range(1.0,3.0) var sprint_speed: float = 2.0
 @export_range(0.1,1.0) var walk_speed: float = 0.5
 var speed_modifier: float = NORMAL_speed
-@export_range(0.5,3.0) var reach: float = 2
+@export_range(0.5,3.0) var reach: float = 2.5
 @export_range(0,10) var pills: int = 0
-
+@export var pill_health_restore: float = 15.0
+@export var health_drain: float = 2.0
 
 # --- Internal Variables ---
 var camera_rotation: Vector2 = Vector2.ZERO
@@ -48,6 +51,7 @@ var hover_object =  null
 var interacting: bool = false
 var sleeping: bool = false
 var viewing: bool = false
+var health: float = 100.0
 
 func _ready() -> void:
 	head_bone = skeleton.find_bone("Head")
@@ -55,8 +59,13 @@ func _ready() -> void:
 	update_camera_rotation()
 	disable_all_outlines(get_tree().root)
 
-func _process(_delta):
+func _process(delta):
 	camera_look(Vector2.ZERO)
+	if !sleeping:
+		health -= health_drain * delta
+		health_bar.value = health
+		if health <= 0:
+			game_over()
 	
 func _input(event: InputEvent) -> void:
 	# Toggle Mouse
@@ -72,6 +81,9 @@ func _input(event: InputEvent) -> void:
 	if hover_object != null and Input.is_action_just_pressed("action"):
 #		print(hover_object)
 		interact(hover_object)
+		
+	if Input.is_action_just_pressed("restore"):
+		restore_health()
 		
 func _physics_process(delta: float) -> void:
 	handle_movement_state(delta)
@@ -199,8 +211,11 @@ func add_outline(body):
 			child.show()
 		if child is MeshInstance3D:
 			var material = child.get_active_material(0)
-			if material and material.next_pass:
-				material.next_pass.set("grow", true)
+			if material:
+				var mat = material.duplicate(true)
+				child.set_surface_override_material(0, mat)
+				if mat.next_pass:	
+					mat.next_pass.set("grow", true)
 
 func remove_outline(body):
 	for child in body.get_children():
@@ -227,12 +242,14 @@ func sleep():
 	freeze_player(true) 
 
 func view(object):
-	if object.interaction_data.has("panel"):
-		var panel_scene = object.interaction_data["panel"]
-		var panel = panel_scene.instantiate()
-		canvas.add_child(panel)
-		interacting = true
-		freeze_player(true)
+	var view_panel = canvas.get_node("/root/level/CanvasLayer/Panel")
+#	print(object.interaction_data)
+	if object.interaction_data.has("image"):
+		view_panel.texture = object.interaction_data["image"]
+		canvas.hide()
+	view_panel.show()
+	interacting = true
+	freeze_player(true)
 
 func grab(object):
 	if object.interaction_data.has("Amount"):
@@ -247,12 +264,24 @@ func exit():
 			root.show()
 			camera.make_current()
 		else:
-			var view_panel = canvas.get_node_or_null("ViewPanel")
+			var view_panel = canvas.get_node_or_null("/root/level/CanvasLayer/Panel")
 			if view_panel:
 				view_panel.hide()
+				canvas.show()
 		freeze_player(false)
 		interacting = false
 
 func freeze_player(is_frozen: bool):
 	set_physics_process(!is_frozen)
 	set_process(!is_frozen)
+	
+func game_over():
+	freeze_player(true)
+	death_text.show()
+	
+func restore_health():
+	if pills > 0:
+		health += pill_health_restore
+		health = clamp(health, 0.0, 100.0)
+		pills -= 1
+		pill_counter.text = "Pills: " + str(pills)
